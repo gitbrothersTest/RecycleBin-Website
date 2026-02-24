@@ -3,11 +3,37 @@ import { motion } from 'motion/react';
 import { ArrowRight, CheckCircle2, Factory, Building2, TreePine, Zap, Leaf } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { WasteCalculator } from '../components/Calculator';
-
 import { useLanguage } from '../context/LanguageContext';
 
 export const Home = () => {
   const { t } = useLanguage();
+
+  const segments = [
+    {
+      title: t('home_seg_commercial'),
+      icon: Building2,
+      desc: t('home_seg_commercial_desc'),
+      features: [t('home_seg_commercial_f1'), t('home_seg_commercial_f2'), t('home_seg_commercial_f3')]
+    },
+    {
+      title: t('home_seg_industrial'),
+      icon: Factory,
+      desc: t('home_seg_industrial_desc'),
+      features: [t('home_seg_industrial_f1'), t('home_seg_industrial_f2'), t('home_seg_industrial_f3')]
+    },
+    {
+      title: t('home_seg_municipal'),
+      icon: TreePine,
+      desc: t('home_seg_municipal_desc'),
+      features: [t('home_seg_municipal_f1'), t('home_seg_municipal_f2'), t('home_seg_municipal_f3')]
+    }
+  ];
+
+  const whyItems = [
+    { title: t('home_why_rapid_title'), desc: t('home_why_rapid_desc'), icon: Zap },
+    { title: t('home_why_zero_title'), desc: t('home_why_zero_desc'), icon: Leaf },
+    { title: t('home_why_smart_title'), desc: t('home_why_smart_desc'), icon: Building2 }
+  ];
 
   return (
     <div className="pt-20">
@@ -30,7 +56,7 @@ export const Home = () => {
                 <span>{t('hero_subtitle')}</span>
               </div>
               <h1 className="text-6xl md:text-8xl font-serif text-brand-primary leading-[0.9] mb-8">
-                {t('hero_title').split('wealth')[0]} <span className="italic">{t('hero_title').split(' ').pop()}</span>
+                {t('hero_title')}
               </h1>
               <p className="text-xl text-slate-600 mb-10 leading-relaxed max-w-xl">
                 {t('hero_desc')}
@@ -43,7 +69,7 @@ export const Home = () => {
                   {t('hero_cta_secondary')}
                 </Link>
               </div>
-              
+
               <div className="mt-12 flex items-center gap-8 border-t border-brand-primary/10 pt-8">
                 <div>
                   <div className="text-2xl font-bold text-brand-primary">24h</div>
@@ -69,14 +95,13 @@ export const Home = () => {
               className="relative"
             >
               <div className="relative z-10 rounded-[40px] overflow-hidden shadow-2xl border-8 border-white">
-                <img 
-                  src="https://picsum.photos/seed/compost/800/1000" 
-                  alt="Industrial Composter" 
+                <img
+                  src="https://picsum.photos/seed/compost/800/1000"
+                  alt="Industrial Composter"
                   className="w-full h-auto object-cover"
                   referrerPolicy="no-referrer"
                 />
               </div>
-              {/* Decorative elements */}
               <div className="absolute -top-10 -right-10 w-40 h-40 bg-brand-accent rounded-full -z-10 animate-pulse" />
               <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-brand-secondary/20 rounded-full -z-10" />
             </motion.div>
@@ -88,35 +113,16 @@ export const Home = () => {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-serif text-brand-primary mb-6">Tailored for Your <span className="italic">Environment</span></h2>
+            <h2 className="text-4xl md:text-5xl font-serif text-brand-primary mb-6">{t('home_segments_title')} <span className="italic">{t('home_segments_title_italic')}</span></h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Whether you're a small restaurant or a large industrial facility, we have the technology to transform your organic waste management.
+              {t('home_segments_desc')}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: 'Commercial',
-                icon: Building2,
-                desc: 'Restaurants, hotels, and office buildings looking to reduce waste costs and meet sustainability goals.',
-                features: ['Compact footprint', 'Plug & play setup', 'Quiet operation']
-              },
-              {
-                title: 'Industrial',
-                icon: Factory,
-                desc: 'Food processing plants and large-scale manufacturing with high organic waste output.',
-                features: ['High capacity', 'Automated loading', 'Continuous processing']
-              },
-              {
-                title: 'Municipal',
-                icon: TreePine,
-                desc: 'Cities and communities aiming for zero-waste targets through decentralized composting.',
-                features: ['Scalable systems', 'Community engagement', 'Data monitoring']
-              }
-            ].map((segment, idx) => (
+            {segments.map((segment, idx) => (
               <motion.div
-                key={segment.title}
+                key={idx}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
@@ -149,19 +155,15 @@ export const Home = () => {
         <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
           <RecycleIcon className="w-full h-full rotate-12" />
         </div>
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <div>
               <h2 className="text-4xl md:text-6xl font-serif mb-8 leading-tight">
-                The Most <span className="italic text-brand-accent">Efficient</span> Way to Compost
+                {t('home_why_title_1')} <span className="italic text-brand-accent">{t('home_why_title_italic')}</span> {t('home_why_title_2')}
               </h2>
               <div className="space-y-8">
-                {[
-                  { title: 'Rapid Processing', desc: 'Convert waste to compost in as little as 24 hours using our proprietary microbial blend.', icon: Zap },
-                  { title: 'Zero Odor', desc: 'Advanced filtration systems ensure your facility remains fresh and pleasant.', icon: Leaf },
-                  { title: 'Smart Monitoring', desc: 'IoT-enabled systems provide real-time data on processing and output quality.', icon: Building2 }
-                ].map((item, idx) => (
+                {whyItems.map((item, idx) => (
                   <div key={idx} className="flex gap-6">
                     <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
                       <item.icon className="text-brand-accent w-6 h-6" />
@@ -176,16 +178,16 @@ export const Home = () => {
             </div>
             <div className="relative">
               <div className="aspect-square rounded-[40px] overflow-hidden border-4 border-white/20">
-                <img 
-                  src="https://picsum.photos/seed/tech/800/800" 
-                  alt="Technology" 
+                <img
+                  src="https://picsum.photos/seed/tech/800/800"
+                  alt="Technology"
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
               </div>
               <div className="absolute -bottom-10 -right-10 bg-brand-accent text-brand-primary p-10 rounded-3xl shadow-2xl max-w-xs">
                 <div className="text-5xl font-serif mb-2">90%</div>
-                <div className="text-sm font-bold uppercase tracking-widest">Reduction in waste volume</div>
+                <div className="text-sm font-bold uppercase tracking-widest">{t('home_why_stat')}</div>
               </div>
             </div>
           </div>
@@ -196,17 +198,16 @@ export const Home = () => {
       <section className="py-24 bg-brand-highlight">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white p-16 rounded-[48px] shadow-xl border border-brand-primary/5">
-            <h2 className="text-4xl md:text-5xl font-serif text-brand-primary mb-8">Ready to Start Your <br/><span className="italic">Sustainability Journey?</span></h2>
+            <h2 className="text-4xl md:text-5xl font-serif text-brand-primary mb-8">{t('home_cta_title_1')} <br /><span className="italic">{t('home_cta_title_italic')}</span></h2>
             <p className="text-lg text-slate-600 mb-12 max-w-2xl mx-auto">
-              Join hundreds of organizations that have already transformed their waste management. 
-              Get a custom assessment and ROI calculation for your facility.
+              {t('home_cta_desc')}
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link to="/contact" className="btn-primary text-xl px-10 py-5">
-                Request a Quote
+                {t('home_cta_quote')}
               </Link>
               <Link to="/solutions" className="btn-secondary text-xl px-10 py-5">
-                View Products
+                {t('home_cta_products')}
               </Link>
             </div>
           </div>

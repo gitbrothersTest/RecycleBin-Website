@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Mail, Phone, MapPin, Send, CheckCircle2, MessageSquare } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export const Contact = () => {
+  const { t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
@@ -52,11 +54,10 @@ export const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
           <div>
             <h1 className="text-5xl md:text-7xl font-serif text-brand-primary mb-8 leading-tight">
-              Let's Build a <br /><span className="italic">Greener Future</span> Together
+              {t('contact_title_1')} <br /><span className="italic">{t('contact_title_italic')}</span> {t('contact_title_2')}
             </h1>
             <p className="text-xl text-slate-600 mb-12 leading-relaxed">
-              Have questions about our technology or need a custom quote?
-              Our team of sustainability experts is ready to help you transform your waste management.
+              {t('contact_desc')}
             </p>
 
             <div className="space-y-8 mb-12">
@@ -65,7 +66,7 @@ export const Contact = () => {
                   <Mail className="text-brand-primary w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-brand-primary">Email Us</h4>
+                  <h4 className="font-bold text-brand-primary">{t('contact_email_label')}</h4>
                   <p className="text-slate-500">contact@recyclebin.ro</p>
                 </div>
               </div>
@@ -74,7 +75,7 @@ export const Contact = () => {
                   <Phone className="text-brand-primary w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-brand-primary">Call Us</h4>
+                  <h4 className="font-bold text-brand-primary">{t('contact_phone_label')}</h4>
                   <p className="text-slate-500">+40 722 000 000</p>
                 </div>
               </div>
@@ -83,7 +84,7 @@ export const Contact = () => {
                   <MapPin className="text-brand-primary w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-brand-primary">Visit Us</h4>
+                  <h4 className="font-bold text-brand-primary">{t('contact_visit_label')}</h4>
                   <p className="text-slate-500">Strada Sustenabilitatii 12, Bucuresti, Romania</p>
                 </div>
               </div>
@@ -94,13 +95,13 @@ export const Contact = () => {
                 <div className="bg-brand-secondary/20 p-2 rounded-lg">
                   <MessageSquare className="text-brand-secondary w-5 h-5" />
                 </div>
-                <h4 className="font-bold text-brand-primary">Live Consultation</h4>
+                <h4 className="font-bold text-brand-primary">{t('contact_consult_title')}</h4>
               </div>
               <p className="text-sm text-slate-500 mb-6">
-                Schedule a 15-minute video call with our technical team to discuss your specific needs.
+                {t('contact_consult_desc')}
               </p>
               <button className="text-brand-primary font-bold text-sm flex items-center gap-2 hover:gap-3 transition-all">
-                Book a slot <Send className="w-4 h-4" />
+                {t('contact_consult_cta')} <Send className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -115,70 +116,44 @@ export const Contact = () => {
                 <div className="bg-brand-primary w-20 h-20 rounded-full flex items-center justify-center mb-8">
                   <CheckCircle2 className="text-white w-10 h-10" />
                 </div>
-                <h2 className="text-3xl font-serif text-brand-primary mb-4">Message Received!</h2>
+                <h2 className="text-3xl font-serif text-brand-primary mb-4">{t('contact_success_title')}</h2>
                 <p className="text-slate-500 mb-8">
-                  Thank you for reaching out. One of our sustainability consultants will contact you within 24 hours.
+                  {t('contact_success_desc')}
                 </p>
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="btn-secondary"
-                >
-                  Send Another Message
+                <button onClick={() => setSubmitted(false)} className="btn-secondary">
+                  {t('contact_success_another')}
                 </button>
               </motion.div>
             ) : (
               <div className="bg-white p-10 md:p-16 rounded-[48px] shadow-2xl border border-brand-primary/5">
-                <h3 className="text-3xl font-serif text-brand-primary mb-8">Request a Quote</h3>
+                <h3 className="text-3xl font-serif text-brand-primary mb-8">{t('contact_form_title')}</h3>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Full Name</label>
-                      <input
-                        required
-                        name="name"
-                        type="text"
-                        className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
-                        placeholder="John Doe"
-                      />
+                      <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">{t('contact_label_name')}</label>
+                      <input required name="name" type="text" className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20" placeholder={t('contact_placeholder_name')} />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Company</label>
-                      <input
-                        required
-                        name="company"
-                        type="text"
-                        className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
-                        placeholder="Eco Corp"
-                      />
+                      <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">{t('contact_label_company')}</label>
+                      <input required name="company" type="text" className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20" placeholder={t('contact_placeholder_company')} />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Email Address</label>
-                    <input
-                      required
-                      name="email"
-                      type="email"
-                      className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
-                      placeholder="john@example.com"
-                    />
+                    <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">{t('contact_label_email')}</label>
+                    <input required name="email" type="email" className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20" placeholder={t('contact_placeholder_email')} />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Solution Interest</label>
+                    <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">{t('contact_label_solution')}</label>
                     <select name="solution" className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20">
-                      <option>Commercial (RB-50)</option>
-                      <option>Professional (RB-250)</option>
-                      <option>Industrial (RB-1000)</option>
-                      <option>Custom Municipal Solution</option>
+                      <option>{t('contact_option_rb50')}</option>
+                      <option>{t('contact_option_rb250')}</option>
+                      <option>{t('contact_option_rb1000')}</option>
+                      <option>{t('contact_option_custom')}</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Message</label>
-                    <textarea
-                      name="message"
-                      rows={4}
-                      className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
-                      placeholder="Tell us about your waste management needs..."
-                    />
+                    <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">{t('contact_label_message')}</label>
+                    <textarea name="message" rows={4} className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20" placeholder={t('contact_placeholder_message')} />
                   </div>
                   {error && (
                     <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
@@ -186,7 +161,7 @@ export const Contact = () => {
                     </div>
                   )}
                   <button type="submit" disabled={sending} className="w-full btn-primary py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed">
-                    {sending ? 'Sending...' : 'Send Inquiry'} <Send className="w-5 h-5" />
+                    {sending ? t('contact_sending') : t('contact_submit')} <Send className="w-5 h-5" />
                   </button>
                 </form>
               </div>

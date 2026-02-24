@@ -2,18 +2,17 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { Scale, Leaf, TrendingDown, DollarSign } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-
 import { useLanguage } from '../context/LanguageContext';
 
 export const WasteCalculator = () => {
   const { t } = useLanguage();
-  const [wasteAmount, setWasteAmount] = useState<number>(500); // kg per month
+  const [wasteAmount, setWasteAmount] = useState<number>(500);
   const [wasteType, setWasteType] = useState<'food' | 'mixed' | 'green'>('food');
 
   const results = useMemo(() => {
     const compostRatio = wasteType === 'food' ? 0.25 : wasteType === 'mixed' ? 0.2 : 0.3;
-    const co2Factor = 0.8; // kg of CO2 saved per kg of waste composted vs landfill
-    const costPerKg = 0.15; // Estimated landfill cost
+    const co2Factor = 0.8;
+    const costPerKg = 0.15;
 
     return {
       compostProduced: Math.round(wasteAmount * compostRatio),
@@ -22,9 +21,15 @@ export const WasteCalculator = () => {
     };
   }, [wasteAmount, wasteType]);
 
+  const wasteTypes: { key: 'food' | 'mixed' | 'green'; label: string }[] = [
+    { key: 'food', label: t('calc_waste_food') },
+    { key: 'mixed', label: t('calc_waste_mixed') },
+    { key: 'green', label: t('calc_waste_green') },
+  ];
+
   const chartData = [
-    { name: 'Compost', value: results.compostProduced, color: '#1a4d2e' },
-    { name: 'Reduction/Evaporation', value: wasteAmount - results.compostProduced, color: '#4f6f52' },
+    { name: t('calc_chart_compost'), value: results.compostProduced, color: '#1a4d2e' },
+    { name: t('calc_chart_reduction'), value: wasteAmount - results.compostProduced, color: '#4f6f52' },
   ];
 
   return (
@@ -33,7 +38,7 @@ export const WasteCalculator = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="text-4xl md:text-5xl font-serif mb-6 text-brand-primary">
-              {t('calc_title').split('Environmental')[0]} <span className="italic">{t('calc_title').split(' ').slice(-2).join(' ')}</span>
+              {t('calc_title')}
             </h2>
             <p className="text-lg text-slate-600 mb-10 leading-relaxed">
               {t('calc_desc')}
@@ -65,17 +70,16 @@ export const WasteCalculator = () => {
                   {t('calc_label_type')}
                 </label>
                 <div className="grid grid-cols-3 gap-4">
-                  {(['food', 'mixed', 'green'] as const).map((type) => (
+                  {wasteTypes.map((wt) => (
                     <button
-                      key={type}
-                      onClick={() => setWasteType(type)}
-                      className={`py-3 rounded-xl text-sm font-bold transition-all ${
-                        wasteType === type
+                      key={wt.key}
+                      onClick={() => setWasteType(wt.key)}
+                      className={`py-3 rounded-xl text-sm font-bold transition-all ${wasteType === wt.key
                           ? 'bg-brand-primary text-white shadow-lg'
                           : 'bg-brand-highlight text-brand-primary hover:bg-brand-accent'
-                      }`}
+                        }`}
                     >
-                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                      {wt.label}
                     </button>
                   ))}
                 </div>
@@ -84,7 +88,7 @@ export const WasteCalculator = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <motion.div 
+            <motion.div
               key={results.compostProduced}
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -97,7 +101,7 @@ export const WasteCalculator = () => {
               <div className="text-sm font-bold text-slate-500 uppercase tracking-widest">{t('calc_res_compost')}</div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               key={results.co2Saved}
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -110,7 +114,7 @@ export const WasteCalculator = () => {
               <div className="text-sm font-bold text-brand-accent uppercase tracking-widest">{t('calc_res_co2')}</div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               key={results.moneySaved}
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -126,13 +130,7 @@ export const WasteCalculator = () => {
             <div className="h-full min-h-[200px] flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie
-                    data={chartData}
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
+                  <Pie data={chartData} innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
                     {chartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
