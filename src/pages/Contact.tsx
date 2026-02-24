@@ -4,10 +4,46 @@ import { Mail, Phone, MapPin, Send, CheckCircle2, MessageSquare } from 'lucide-r
 
 export const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError('');
+    setSending(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const payload = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      message: [
+        `Company: ${formData.get('company') || 'N/A'}`,
+        `Solution Interest: ${formData.get('solution') || 'N/A'}`,
+        '',
+        formData.get('message') || '',
+      ].join('\n'),
+    };
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setSubmitted(true);
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -16,10 +52,10 @@ export const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
           <div>
             <h1 className="text-5xl md:text-7xl font-serif text-brand-primary mb-8 leading-tight">
-              Let's Build a <br/><span className="italic">Greener Future</span> Together
+              Let's Build a <br /><span className="italic">Greener Future</span> Together
             </h1>
             <p className="text-xl text-slate-600 mb-12 leading-relaxed">
-              Have questions about our technology or need a custom quote? 
+              Have questions about our technology or need a custom quote?
               Our team of sustainability experts is ready to help you transform your waste management.
             </p>
 
@@ -71,7 +107,7 @@ export const Contact = () => {
 
           <div className="relative">
             {submitted ? (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="bg-white p-12 rounded-[48px] shadow-2xl border border-brand-primary/5 text-center h-full flex flex-col items-center justify-center"
@@ -83,7 +119,7 @@ export const Contact = () => {
                 <p className="text-slate-500 mb-8">
                   Thank you for reaching out. One of our sustainability consultants will contact you within 24 hours.
                 </p>
-                <button 
+                <button
                   onClick={() => setSubmitted(false)}
                   className="btn-secondary"
                 >
@@ -97,18 +133,20 @@ export const Contact = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Full Name</label>
-                      <input 
+                      <input
                         required
-                        type="text" 
+                        name="name"
+                        type="text"
                         className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                         placeholder="John Doe"
                       />
                     </div>
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Company</label>
-                      <input 
+                      <input
                         required
-                        type="text" 
+                        name="company"
+                        type="text"
                         className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                         placeholder="Eco Corp"
                       />
@@ -116,16 +154,17 @@ export const Contact = () => {
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Email Address</label>
-                    <input 
+                    <input
                       required
-                      type="email" 
+                      name="email"
+                      type="email"
                       className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                       placeholder="john@example.com"
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Solution Interest</label>
-                    <select className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20">
+                    <select name="solution" className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20">
                       <option>Commercial (RB-50)</option>
                       <option>Professional (RB-250)</option>
                       <option>Industrial (RB-1000)</option>
@@ -134,14 +173,20 @@ export const Contact = () => {
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Message</label>
-                    <textarea 
+                    <textarea
+                      name="message"
                       rows={4}
                       className="w-full bg-brand-highlight border border-brand-primary/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                       placeholder="Tell us about your waste management needs..."
                     />
                   </div>
-                  <button type="submit" className="w-full btn-primary py-4 text-lg">
-                    Send Inquiry <Send className="w-5 h-5" />
+                  {error && (
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                      {error}
+                    </div>
+                  )}
+                  <button type="submit" disabled={sending} className="w-full btn-primary py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                    {sending ? 'Sending...' : 'Send Inquiry'} <Send className="w-5 h-5" />
                   </button>
                 </form>
               </div>
