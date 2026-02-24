@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 dotenv.config();
 
@@ -65,7 +66,8 @@ app.post("/api/contact", async (req, res) => {
   }
 });
 
-const distPath = path.resolve("dist");
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const distPath = path.join(__dirname, "dist");
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
   app.get("*", (_req, res) => {
